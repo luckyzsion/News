@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/app.css" />
+		<style>
+			
+			.addrec {
+				padding: 5px;
+			}
+			
+			.name {
+				font-size: 14px;
+				line-height: 30px;
+				height: 30px;
+				overflow: hidden;
+				text-align: center;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content mui-scroll-wrapper" id="pullrefresh">
+			<div id="recommend" class="mui-table-view mui-grid-view own-gray-color">
+			
+			</div>
+		</div>
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/common.js"></script>
+	
+		<script>
+		
+		var recommendArray = [];//推荐新闻数组
+		
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					}
+				}
+			});
+			mui.plusReady(function() {
+				pulldownRefresh();
+			});
+
+			function carousel() {
+				mui.ajax({
+					url: Common.api + '?id=recomm&page=1',
+					async: true,
+					cache: false,
+					method: 'get',
+					dataType: 'json',
+					headers:Common.apikey,
+					success: function(data) {
+						console.log(JSON.stringify(data));
+						if (data.code == 0) {
+							
+							if(recommendArray.length>0) recommendArray = [];
+							
+							mui.each(data.data.article,function(index,item){
+								var dataItem = {};
+								dataItem.title = item.title;
+								dataItem.url = item.url;
+								dataItem.img = item.img;
+								dataItem.author = item.author;
+								dataItem.time = item.time;
+								recommendArray.push(dataItem);
+								console.log('1');
+							});
+							//设置推荐商品
+							setRecommend();
+							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+						}
+						
+					}
+				});
+			}
+		//设置推荐新闻
+		function setRecommend(){
+			var recommend = document.getElementById('recommend');
+			if(recommend.length>0) recommend.removeChild(recommend.childNodes);
+			mui.each(recommendArray,function(index,item){
+				var li = document.createElement('li');
+				li.className = 'mui-table-view-cell mui-media mui-col-xs-6';
+				li.innerHTML = '<a href="'+item.url+'">\
+					<div class= "bgDiv">\
+						<img class="mui-media-object" src="'+item.img+'"/>\
+						<div class="mui-media-body">\
+							<p class="mui-ellipsis-2">'+item.title+'</p>\
+						</div>\
+					</div>\
+				</a>';
+				recommend.appendChild(li);
+			});
+		}
+		
+			function pulldownRefresh() {
+				carousel();
+			}
+		</script>
+	</body>
+
+</html>
