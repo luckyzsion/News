@@ -4,11 +4,13 @@
 			"index-sub.html",
 			"js/mui.min.js",
 			"fonts/mui.ttf",
-			"css/mui.min.css"
+			"css/mui.min.css",
+			"Demo/tableViewDemo.html"
 		],
 		"refer": [
 			"index-sub.html",
-			"index-menu.html"
+			"index-menu.html",
+			"Demo/tableViewDemo.html"
 		]
 	},
 	"index-menu.html": {
@@ -26,6 +28,13 @@
 			"css/mui.min.css",
 			"js/common.js",
 			"js/zepto.min.js"
+		]
+	},
+	"Demo/tableViewDemo.html": {
+		"resources": [
+			"js/common.js",
+			"js/mui.min.js",
+			"css/mui.min.css"
 		]
 	}
 }

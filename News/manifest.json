@@ -197,7 +197,8 @@
 					"index-sub.html",
 					"js/mui.min.js",
 					"fonts/mui.ttf",
-					"css/mui.min.css"
+					"css/mui.min.css",
+					"Demo/tableViewDemo.html"
 				],
 				"refer": [
 					"index-menu.html"
@@ -221,6 +222,15 @@
 					"css/mui.min.css",
 					"js/common.js",
 					"js/zepto.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Demo/tableViewDemo.html": {
+				"resources": [
+					"js/common.js",
+					"js/mui.min.js",
+					"css/mui.min.css"
 				],
 				"refer": [],
 				"priority": 0

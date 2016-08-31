@@ -27,7 +27,7 @@
 
 	<body>
 		<div class="mui-content mui-scroll-wrapper" id="pullrefresh">
-			<div id="recommend" class="mui-table-view mui-grid-view own-gray-color">
+			<div id="recommend" class="mui-table-view  own-gray-color">
 			
 			</div>
 		</div>
@@ -49,6 +49,18 @@
 			});
 			mui.plusReady(function() {
 				pulldownRefresh();
+			});
+			
+			mui('.mui-table-view').on('tap', 'a', function() {
+				var url = this.getAttribute("data-url");
+				close();
+				mui.openWindow({
+					id: url,
+					url: url,
+					waiting: {
+						autoShow: false
+					}
+				});
 			});
 
 			function carousel() {
@@ -84,23 +96,62 @@
 				});
 			}
 		//设置推荐新闻
-		function setRecommend(){
+		
+
+   function getLocalTime(nS) {       
+    	return  new Date(parseInt(nS) * 1000).Format("yyyy-MM-dd hh:mm");    
+ 	}       
+	Date.prototype.Format = function (fmt) { //author: meizz   
+        var o = {  
+            "M+": this.getMonth() + 1, //月份   
+            "d+": this.getDate(), //日   
+            "h+": this.getHours(), //小时   
+            "m+": this.getMinutes(), //分   
+            "s+": this.getSeconds(), //秒   
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+            "S": this.getMilliseconds() //毫秒   
+        };  
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));  
+        for (var k in o)  
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));  
+        return fmt;  
+    }  
+    
+
+    function setRecommend(){
 			var recommend = document.getElementById('recommend');
-			if(recommend.length>0) recommend.removeChild(recommend.childNodes);
+			
 			mui.each(recommendArray,function(index,item){
 				var li = document.createElement('li');
-				li.className = 'mui-table-view-cell mui-media mui-col-xs-6';
-				li.innerHTML = '<a href="'+item.url+'">\
-					<div class= "bgDiv">\
-						<img class="mui-media-object" src="'+item.img+'"/>\
+				li.className = 'mui-table-view-cell mui-media ';
+				li.innerHTML = '<a data-url="'+item.url+'" href="javascript:;">\
+						<img class="mui-media-object mui-pull-left" src="'+item.img+'"/>\
 						<div class="mui-media-body">\
-							<p class="mui-ellipsis-2">'+item.title+'</p>\
+							<p class="mui-ellipsis">'+item.title+'</p>\
+							<p class="mui-ellipsis">'+getLocalTime(item.time)+'</p>\
 						</div>\
-					</div>\
 				</a>';
 				recommend.appendChild(li);
 			});
 		}
+    
+//		function setRecommend(){
+//			var recommend = document.getElementById('recommend');
+//			if(recommend.length>0) recommend.removeChild(recommend.childNodes);
+//			mui.each(recommendArray,function(index,item){
+//				var li = document.createElement('li');
+//				li.className = 'mui-table-view-cell mui-media mui-col-xs-6';
+//				li.innerHTML = '<a href="'+item.url+'">\
+//					<div class= "bgDiv">\
+//						<img class="mui-media-object" src="'+item.img+'"/>\
+//						<div class="mui-media-body">\
+//							<p class="mui-ellipsis-2">'+item.title+'</p>\
+//						</div>\
+//					</div>\
+//				</a>';
+//				recommend.appendChild(li);
+//			});
+//		}
 		
 			function pulldownRefresh() {
 				carousel();
