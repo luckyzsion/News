@@ -232,6 +232,17 @@
 					"js/mui.min.js",
 					"css/mui.min.css"
 				],
+				"refer": [
+					"Demo/news-detail.html"
+				],
+				"priority": 0
+			},
+			"Demo/news-detail.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css"
+				],
 				"refer": [],
 				"priority": 0
 			}

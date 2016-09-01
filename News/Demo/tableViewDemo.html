@@ -53,14 +53,18 @@
 			
 			mui('.mui-table-view').on('tap', 'a', function() {
 				var url = this.getAttribute("data-url");
-				close();
+//				close();
 				mui.openWindow({
-					id: url,
-					url: url,
+					id: "news-detail.html",
+					url: "news-detail.html",
 					waiting: {
 						autoShow: false
-					}
+					},
+					extras:{
+				     name:url  //扩展参数
+				    },
 				});
+				
 			});
 
 			function carousel() {

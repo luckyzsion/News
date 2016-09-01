@@ -35,6 +35,16 @@
 			"js/common.js",
 			"js/mui.min.js",
 			"css/mui.min.css"
+		],
+		"refer": [
+			"Demo/news-detail.html"
+		]
+	},
+	"Demo/news-detail.html": {
+		"resources": [
+			"js/mui.min.js",
+			"fonts/mui.ttf",
+			"css/mui.min.css"
 		]
 	}
 }
