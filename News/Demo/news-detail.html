@@ -19,12 +19,11 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title"></h1>
+			<h1 id="title" class="mui-title"></h1>
 		</header>
 		<div class="mui-content" style="background-color: white;">
 			<div class="mui-content-padded">
-				<h4 id="title"></h4>
-				<div id="time" style="color: gray; margin: 10px 0;"></div>
+
 				<p id="content"></p>
 				
 			</div>
@@ -34,15 +33,42 @@
 		<script>
 		
 			mui.init({
-				swipeBack:true
-				 
-    
+				swipeBack:false,
+				
 			});
 			mui.plusReady(function(){
 			
-				var name = plus.webview.currentWebview().name;
-				console.log(name);
+//				var url = plus.webview.currentWebview().url;
+//				var title = document.getElementById('title');
 				
+				window.addEventListener('buttonClick',function(event){          
+			        var url = event.detail.url;
+			        title.innerText = event.detail.title;
+			        var ws = plus.webview.open(url,"",{top:"46px",bottom:"0px"});
+//			        var ws = plus.webview.create(url,"",{top:"46px",bottom:"0px"});
+//          		ws.show();
+		             plus.webview.currentWebview().append(ws);
+		             
+		             var wvs=plus.webview.all();
+				    for(var i=0;i<wvs.length;i++){
+				        console.log("webview"+i+": "+wvs[i].parent());
+				    }
+			    });
+				
+				
+//				title.innerText = plus.webview.currentWebview().title;
+				
+//				var ws = plus.webview.create(url,"",{top:"46px",bottom:"0px"});
+////          ws.show();
+//           plus.webview.currentWebview().append(ws);
+//           
+//           var wvs=plus.webview.all();
+//		    for(var i=0;i<wvs.length;i++){
+//		        console.log("webview"+i+": "+wvs[i].parent());
+//		    }
+    
+//				plus.webview.currentWebview().loadURL("http://www.baidu.com");
+				 
 			});
 		</script>
 	</body>

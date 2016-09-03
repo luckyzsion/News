@@ -201,7 +201,8 @@
 					"Demo/tableViewDemo.html"
 				],
 				"refer": [
-					"index-menu.html"
+					"index-menu.html",
+					"Demo/news-detail.html"
 				],
 				"priority": 0
 			},
@@ -233,7 +234,9 @@
 					"css/mui.min.css"
 				],
 				"refer": [
-					"Demo/news-detail.html"
+					"Demo/news-detail.html",
+					"Demo/template.html",
+					"Demo/detail.html"
 				],
 				"priority": 0
 			},
@@ -241,7 +244,43 @@
 				"resources": [
 					"js/mui.min.js",
 					"fonts/mui.ttf",
-					"css/mui.min.css"
+					"css/mui.min.css",
+					"Demo/detail.html"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Demo/template-main-first.html": {
+				"resources": [
+					"css/own.css",
+					"css/iconfont.css",
+					"js/mui.min.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Demo/template-main-second.html": {
+				"resources": [
+					"fonts/mui.ttf"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"Demo/template.html": {
+				"resources": [
+					"js/own.js",
+					"js/mui.min.js"
+				],
+				"refer": [
+					"Demo/template-main-first.html",
+					"Demo/template-main-second.html",
+					"Demo/template-main-third.html"
+				],
+				"priority": 0
+			},
+			"Demo/detail.html": {
+				"resources": [
+					"js/mui.min.js"
 				],
 				"refer": [],
 				"priority": 0

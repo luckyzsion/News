@@ -45,24 +45,54 @@
 					down: {
 						callback: pulldownRefresh
 					}
-				}
+				},
+//				preloadPages:[{
+//				    id:'news-detail.html',
+//				    url:'news-detail.html'           
+//				}]
+				 
 			});
+			
+			
+			
 			mui.plusReady(function() {
 				pulldownRefresh();
+				//预加载父子模版
+//				initTemplate();
 			});
 			
 			mui('.mui-table-view').on('tap', 'a', function() {
-				var url = this.getAttribute("data-url");
-//				close();
+				var index = this.getAttribute("data-url");
+				// plus.runtime.openURL(url);
+				//plus.webview.currentWebview().loadURL(url);
+//				mui.preload({
+//				    url:'news-detail.html',
+//				    id:'news-detail.html',//默认使用当前页面的url作为id
+//				    styles:{},//窗口参数
+//				    extras:{}//自定义扩展参数
+//				});
+
+				plus.webview.open('news-detail.html','news-detail.html');//替代预加载，使用fire传递参数
+						var detailPage = null;
+						//获得详情页面
+						  if(!detailPage){
+						    detailPage = plus.webview.getWebviewById('news-detail.html');
+						  }
+						mui.fire(detailPage,"buttonClick",{
+				            "url":recommendArray[index].url,
+				            "title":recommendArray[index].title
+				        });
+
 				mui.openWindow({
 					id: "news-detail.html",
-					url: "news-detail.html",
-					waiting: {
-						autoShow: false
-					},
-					extras:{
-				     name:url  //扩展参数
-				    },
+//					url: "news-detail.html",
+//					waiting: {
+//						autoShow: false
+//					},
+//					extras:{
+//				     url:recommendArray[index].url,
+//				     title:recommendArray[index].title//扩展参数
+//				    },
 				});
 				
 			});
@@ -128,7 +158,7 @@
 			mui.each(recommendArray,function(index,item){
 				var li = document.createElement('li');
 				li.className = 'mui-table-view-cell mui-media ';
-				li.innerHTML = '<a data-url="'+item.url+'" href="javascript:;">\
+				li.innerHTML = '<a data-url="'+index+'" href="javascript:;">\
 						<img class="mui-media-object mui-pull-left" src="'+item.img+'"/>\
 						<div class="mui-media-body">\
 							<p class="mui-ellipsis">'+item.title+'</p>\
@@ -156,7 +186,17 @@
 //				recommend.appendChild(li);
 //			});
 //		}
-		
+			//预加载template
+		function initTemplate(){
+			var webview =  mui.preload({
+				id:'template',
+				url:'template.html',
+				styles:{
+					top: '-1000px',
+				}
+			});
+			webview.show();
+		};
 			function pulldownRefresh() {
 				carousel();
 			}
