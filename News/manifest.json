@@ -212,9 +212,12 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css",
 					"image/log.png",
-					"images/logo.png"
+					"images/logo.png",
+					"js/common.js"
 				],
-				"refer": [],
+				"refer": [
+					"Demo/tableViewDemo.html"
+				],
 				"priority": 0
 			},
 			"index-sub.html": {

@@ -28,12 +28,12 @@
 			</div>
 			<ul class="mui-table-view mui-table-view-chevron">
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" data-url="week-update.html" href="javascript:;">
+					<a class="mui-navigate-right" data-url="society" href="javascript:;">
 						社会
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" data-url="lastest.html" href="javascript:;">
+					<a class="mui-navigate-right" data-url="finance" href="javascript:;">
 						财经
 					</a>
 				</li>
@@ -74,15 +74,21 @@
 				index = plus.webview.currentWebview().opener();
 			})
 			mui('.mui-table-view').on('tap', 'a', function() {
-				var url = this.getAttribute("data-url");
-				close();
-				mui.openWindow({
-					id: url,
-					url: url,
-					waiting: {
-						autoShow: false
-					}
-				});
+				var type = this.getAttribute("data-url");
+//				plus.webview.open('/Demo/tableViewDemo.html','tableViewDemo.html');//替代预加载，使用fire传递参数
+						var tablePage = null;
+						//获得列表
+						  if(!tablePage){
+						    tablePage = plus.webview.getWebviewById('list');
+						  }
+						mui.fire(tablePage,"leftMenuSel",{
+				            "type":type
+				        });
+				        mui.openWindow({
+							id: "list"
+		
+						});
+					close();
 			});
 
 			/**

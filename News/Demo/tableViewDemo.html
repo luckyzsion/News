@@ -27,17 +27,31 @@
 
 	<body>
 		<div class="mui-content mui-scroll-wrapper" id="pullrefresh">
+			<div id="slider" class="mui-slider">
+				<div id="lunbo" class="mui-slider-group">
+				</div>
+				<div id="lunbo-indicator" class="mui-slider-indicator mui-text-right">
+							<div class="mui-indicator mui-active"></div>
+							<div class="mui-indicator"></div>
+							<div class="mui-indicator"></div>
+							<div class="mui-indicator"></div>
+					</div>
+			</div>
 			<div id="recommend" class="mui-table-view  own-gray-color">
 			
 			</div>
 		</div>
+		
+		
 		
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/common.js"></script>
 	
 		<script>
 		
+		var lunboArray = [];//轮播
 		var recommendArray = [];//推荐新闻数组
+		var typeVal='recomm';
 		
 			mui.init({
 				pullRefresh: {
@@ -56,6 +70,14 @@
 			
 			
 			mui.plusReady(function() {
+				
+				window.addEventListener('leftMenuSel',function(event){          
+			         typeVal = event.detail.type;
+			         console.log('event'+typeVal);
+			         pulldownRefresh();
+			    });
+			
+				console.log(typeVal);
 				pulldownRefresh();
 				//预加载父子模版
 //				initTemplate();
@@ -97,9 +119,11 @@
 				
 			});
 
+	
+
 			function carousel() {
 				mui.ajax({
-					url: Common.api + '?id=recomm&page=1',
+					url: Common.api + '?id='+typeVal+'&page=1',
 					async: true,
 					cache: false,
 					method: 'get',
@@ -110,6 +134,7 @@
 						if (data.code == 0) {
 							
 							if(recommendArray.length>0) recommendArray = [];
+							if(lunboArray.length>0) lunboArray = [];
 							
 							mui.each(data.data.article,function(index,item){
 								var dataItem = {};
@@ -119,8 +144,10 @@
 								dataItem.author = item.author;
 								dataItem.time = item.time;
 								recommendArray.push(dataItem);
-								console.log('1');
+								lunboArray.push(dataItem);
+//								console.log('1');
 							});
+							setLunbo();
 							//设置推荐商品
 							setRecommend();
 							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
@@ -151,10 +178,48 @@
         return fmt;  
     }  
     
-
+    function setLunbo(){
+			var lunbo = document.getElementById('lunbo');
+			var firstDiv="";
+			var lastDiv = "";
+			var tempFDiv =document.createElement('tempF');
+			var tempLDiv =document.createElement('tempL');
+			lunbo.innerHTML="";//清空lunbo
+			lunbo.appendChild(tempFDiv);//多插入一次
+			lunbo.appendChild(tempLDiv);//多插入一次
+			console.log('q'+lunbo.innerHTML);
+			mui.each(lunboArray,function(index,item){		
+				if(index>3)return;
+				console.log(index);
+				var div = document.createElement('div');
+				div.className = 'mui-slider-item mui-slider-item-duplicate ';
+				div.innerHTML = '<a data-url="'+index+'" href="javascript:;">\
+						<img  height=200 src="'+item.img+'"/>\
+							<p class="mui-slider-title">'+item.title+'</p>\
+						</a>';
+						
+				lunbo.appendChild(div);
+				if(index==0){
+					firstDiv = div;
+				}else if(index == 3){
+					console.log(lunbo.innerHTML);
+					lastDiv = div;
+//					lunbo.appendChild(tempLDiv);
+//					lunbo.replaceChild(lastDiv,tempFDiv);
+				}
+				
+			});
+//			lunbo.appendChild(firstDiv);
+			console.log(lunbo.innerHTML);
+			var slider = mui("#slider");
+			slider.slider({
+					interval: 5000
+				});
+    }
+    
     function setRecommend(){
 			var recommend = document.getElementById('recommend');
-			
+			recommend.innerHTML="";//清空list
 			mui.each(recommendArray,function(index,item){
 				var li = document.createElement('li');
 				li.className = 'mui-table-view-cell mui-media ';
@@ -165,6 +230,7 @@
 							<p class="mui-ellipsis">'+getLocalTime(item.time)+'</p>\
 						</div>\
 				</a>';
+//				console.log(li.innerHTML);
 				recommend.appendChild(li);
 			});
 		}

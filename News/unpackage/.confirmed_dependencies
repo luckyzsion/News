@@ -20,7 +20,11 @@
 			"fonts/mui.ttf",
 			"css/mui.min.css",
 			"image/log.png",
-			"images/logo.png"
+			"images/logo.png",
+			"js/common.js"
+		],
+		"refer": [
+			"Demo/tableViewDemo.html"
 		]
 	},
 	"index-sub.html": {
