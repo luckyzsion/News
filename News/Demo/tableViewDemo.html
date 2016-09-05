@@ -27,28 +27,73 @@
 
 	<body>
 		<div class="mui-content mui-scroll-wrapper" id="pullrefresh">
-			<div id="slider" class="mui-slider">
-				<div id="lunbo" class="mui-slider-group">
-				</div>
-				<div id="lunbo-indicator" class="mui-slider-indicator mui-text-right">
-							<div class="mui-indicator mui-active"></div>
-							<div class="mui-indicator"></div>
-							<div class="mui-indicator"></div>
-							<div class="mui-indicator"></div>
+			<!--整体作为scroll，否则无法下拉列表-->
+			<div class="mui-scroll">
+				<div id="slider" class="mui-slider">
+					<div id="lunbo" class="mui-slider-group mui-slider-loop">
 					</div>
-			</div>
-			<div id="recommend" class="mui-table-view  own-gray-color">
-			
+					<div id="lunbo-indicator" class="mui-slider-indicator mui-text-right">
+								<div class="mui-indicator mui-active"></div>
+								<div class="mui-indicator"></div>
+								<div class="mui-indicator"></div>
+								<div class="mui-indicator"></div>
+						</div>
+				</div>
+				<div id="recommend" class="mui-table-view  own-gray-color">				
+				</div>
 			</div>
 		</div>
 		
+		<script type="text/template" id="loopTpl">
+			<div class="mui-slider-item mui-slider-item-duplicate">
+				<a href="javascript:;" data-url="<%=list[list.length-1].url%>">
+					<img src="<%=list[list.length-1].img%>">
+					<p class="mui-slider-title">
+						<%=list[list.length-1].title%>
+					</p>
+				</a>
+			</div>
+			<% _.each(list, function(v, i){ %>
+			<div class="mui-slider-item">
+				<a href="javascript:;" data-url="<%=v.url%>">
+					<img src="<%=v.img%>">
+					<p class="mui-slider-title">
+						<%=v.title%>
+					</p>
+				</a>
+			</div>
+			<% }) %>
+			<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+			<div class="mui-slider-item mui-slider-item-duplicate">
+				<a href="javascript:;" data-url="<%=list[0].url%>">
+					<img src="<%=list[0].img%>">
+					<p class="mui-slider-title">
+						<%=list[0].title%>
+					</p>
+				</a>
+			</div>
+		</script>
+		<script type="text/template" id="indicatorTpl">
+			<% _.each(list, function(v, i){ %>
+			<% if(i == 0){ %>
+			<div class="mui-indicator mui-active"></div>
+			<% } else { %>
+			<div class="mui-indicator"></div>
+			<% } %>
+			<% }) %>
+		</script>
 		
 		
 		<script src="../js/mui.min.js"></script>
 		<script src="../js/common.js"></script>
+		<script  src="../js/mjs.js" ></script>
+		<script src="../js/zepto.min.js"></script>
+		<script src="../js/underscore.js"></script>
 	
 		<script>
-		
+		var loopTplRender = _.template($("#loopTpl").html());
+		var indicatorTplRender = _.template($("#indicatorTpl").html());
+			
 		var lunboArray = [];//轮播
 		var recommendArray = [];//推荐新闻数组
 		var typeVal='recomm';
@@ -94,27 +139,27 @@
 //				    extras:{}//自定义扩展参数
 //				});
 
-				plus.webview.open('news-detail.html','news-detail.html');//替代预加载，使用fire传递参数
-						var detailPage = null;
-						//获得详情页面
-						  if(!detailPage){
-						    detailPage = plus.webview.getWebviewById('news-detail.html');
-						  }
-						mui.fire(detailPage,"buttonClick",{
-				            "url":recommendArray[index].url,
-				            "title":recommendArray[index].title
-				        });
+//				plus.webview.open('news-detail.html','news-detail.html');//替代预加载，使用fire传递参数
+//						var detailPage = null;
+//						//获得详情页面
+//						  if(!detailPage){
+//						    detailPage = plus.webview.getWebviewById('news-detail.html');
+//						  }
+//						mui.fire(detailPage,"buttonClick",{
+//				            "url":recommendArray[index].url,
+//				            "title":recommendArray[index].title
+//				        });
 
 				mui.openWindow({
 					id: "news-detail.html",
-//					url: "news-detail.html",
-//					waiting: {
-//						autoShow: false
-//					},
-//					extras:{
-//				     url:recommendArray[index].url,
-//				     title:recommendArray[index].title//扩展参数
-//				    },
+					url: "news-detail.html",
+					waiting: {
+						autoShow: false
+					},
+					extras:{
+				     url:recommendArray[index].url,
+				     title:recommendArray[index].title//扩展参数
+				    },
 				});
 				
 			});
@@ -130,7 +175,7 @@
 					dataType: 'json',
 					headers:Common.apikey,
 					success: function(data) {
-						console.log(JSON.stringify(data));
+//						console.log(JSON.stringify(data));
 						if (data.code == 0) {
 							
 							if(recommendArray.length>0) recommendArray = [];
@@ -144,7 +189,8 @@
 								dataItem.author = item.author;
 								dataItem.time = item.time;
 								recommendArray.push(dataItem);
-								lunboArray.push(dataItem);
+								if(index<4)
+									lunboArray.push(dataItem);
 //								console.log('1');
 							});
 							setLunbo();
@@ -179,42 +225,54 @@
     }  
     
     function setLunbo(){
-			var lunbo = document.getElementById('lunbo');
-			var firstDiv="";
-			var lastDiv = "";
-			var tempFDiv =document.createElement('tempF');
-			var tempLDiv =document.createElement('tempL');
-			lunbo.innerHTML="";//清空lunbo
-			lunbo.appendChild(tempFDiv);//多插入一次
-			lunbo.appendChild(tempLDiv);//多插入一次
-			console.log('q'+lunbo.innerHTML);
-			mui.each(lunboArray,function(index,item){		
-				if(index>3)return;
-				console.log(index);
-				var div = document.createElement('div');
-				div.className = 'mui-slider-item mui-slider-item-duplicate ';
-				div.innerHTML = '<a data-url="'+index+'" href="javascript:;">\
-						<img  height=200 src="'+item.img+'"/>\
-							<p class="mui-slider-title">'+item.title+'</p>\
-						</a>';
-						
-				lunbo.appendChild(div);
-				if(index==0){
-					firstDiv = div;
-				}else if(index == 3){
-					console.log(lunbo.innerHTML);
-					lastDiv = div;
-//					lunbo.appendChild(tempLDiv);
-//					lunbo.replaceChild(lastDiv,tempFDiv);
-				}
-				
-			});
-//			lunbo.appendChild(firstDiv);
-			console.log(lunbo.innerHTML);
-			var slider = mui("#slider");
-			slider.slider({
-					interval: 5000
-				});
+    	
+    	var obj = {
+				list: lunboArray
+			};
+		$("#loop").html(loopTplRender(obj));
+		$("#indicator").html(indicatorTplRender(obj));
+		mui("#carouselSlider").slider({
+			interval: 5000
+		});
+
+//			var lunbo = document.getElementById('lunbo');
+//			var firstDiv="";
+//			var lastDiv = "";
+//			var tempFDiv =document.createElement('tempF');
+//			var tempLDiv =document.createElement('tempL');
+//			lunbo.innerHTML="";//清空lunbo
+//		
+//			console.log('q'+lunbo.innerHTML);
+//			mui.each(lunboArray,function(index,item){		
+//				if(index>3)return;
+//				console.log(index);
+//				var div = document.createElement('div');
+//				div.className = 'mui-slider-item mui-slider-item-duplicate ';
+//				div.innerHTML = '<a data-url="'+index+'" href="javascript:;">\
+//						<img  height=200 src="'+item.img+'"/>\
+//							<p class="mui-slider-title">'+item.title+'</p>\
+//						</a>';
+//						
+//				lunbo.appendChild(div);
+//				if(index==0){
+//					firstDiv = div;
+//				}else if(index == 3){
+//					console.log(lunbo.innerHTML);
+//					lastDiv = div;
+//					mjs('.mui-slider-group').prepend('<div class="mui-slider-item mui-slider-item-duplicate ">'+lastDiv.innerHTML+'</div>');
+//					mjs('.mui-slider-group').append('<div class="mui-slider-item mui-slider-item-duplicate ">'+firstDiv.innerHTML+'</div>');
+//					console.log('123'+mjs('.mui-slider-group').first().html());
+////					lunbo.appendChild(tempLDiv);
+////					lunbo.replaceChild(lastDiv,tempFDiv);
+//				}
+//				
+//			});
+////			lunbo.appendChild(firstDiv);
+////			console.log(lunbo.innerHTML);
+//			var slider = mui("#slider");
+//			slider.slider({
+//					interval: 5000
+//				});
     }
     
     function setRecommend(){
@@ -225,6 +283,7 @@
 				li.className = 'mui-table-view-cell mui-media ';
 				li.innerHTML = '<a data-url="'+index+'" href="javascript:;">\
 						<img class="mui-media-object mui-pull-left" src="'+item.img+'"/>\
+						<button type="button" class="mui-btn mui-btn-primary">蓝色</button>\
 						<div class="mui-media-body">\
 							<p class="mui-ellipsis">'+item.title+'</p>\
 							<p class="mui-ellipsis">'+getLocalTime(item.time)+'</p>\
@@ -235,24 +294,6 @@
 			});
 		}
     
-//		function setRecommend(){
-//			var recommend = document.getElementById('recommend');
-//			if(recommend.length>0) recommend.removeChild(recommend.childNodes);
-//			mui.each(recommendArray,function(index,item){
-//				var li = document.createElement('li');
-//				li.className = 'mui-table-view-cell mui-media mui-col-xs-6';
-//				li.innerHTML = '<a href="'+item.url+'">\
-//					<div class= "bgDiv">\
-//						<img class="mui-media-object" src="'+item.img+'"/>\
-//						<div class="mui-media-body">\
-//							<p class="mui-ellipsis-2">'+item.title+'</p>\
-//						</div>\
-//					</div>\
-//				</a>';
-//				recommend.appendChild(li);
-//			});
-//		}
-		
 			function pulldownRefresh() {
 				carousel();
 			}
