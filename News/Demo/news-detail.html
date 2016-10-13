@@ -37,9 +37,11 @@
 				
 			});
 			mui.plusReady(function(){
-			console.log("webview");
+			
 				var url = plus.webview.currentWebview().url;
 				var title = document.getElementById('title');
+				
+				console.log(url);
 				
 				window.addEventListener('buttonClick',function(event){          
 			        console.log("webviewevent");
@@ -63,6 +65,12 @@
 ////          ws.show();
              plus.webview.currentWebview().append(ws);
 //           
+		mjs('body').firstChild.style.display = "none";
+		
+			
+
+
+
 //           var wvs=plus.webview.all();
 //		    for(var i=0;i<wvs.length;i++){
 //		        console.log("webview"+i+": "+wvs[i].parent());

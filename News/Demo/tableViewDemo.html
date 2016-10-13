@@ -175,7 +175,7 @@
 					dataType: 'json',
 					headers:Common.apikey,
 					success: function(data) {
-//						console.log(JSON.stringify(data));
+						console.log(JSON.stringify(data));
 						if (data.code == 0) {
 							
 							if(recommendArray.length>0) recommendArray = [];
@@ -199,7 +199,10 @@
 							mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
 						}
 						
-					}
+					},
+					error: function () {
+                    		alert('fail');
+                		}
 				});
 			}
 		//设置推荐新闻
@@ -283,10 +286,10 @@
 				li.className = 'mui-table-view-cell mui-media ';
 				li.innerHTML = '<a data-url="'+index+'" href="javascript:;">\
 						<img class="mui-media-object mui-pull-left" src="'+item.img+'"/>\
-						<button type="button" class="mui-btn mui-btn-primary">蓝色</button>\
 						<div class="mui-media-body">\
+						<button type="button" class="mui-btn " style="color:red;font-size:0.6em;padding:1px;float:right;margin-right:6px;margin-top:2px">详情</button>\
 							<p class="mui-ellipsis">'+item.title+'</p>\
-							<p class="mui-ellipsis">'+getLocalTime(item.time)+'</p>\
+							'+getLocalTime(item.time)+'\
 						</div>\
 				</a>';
 //				console.log(li.innerHTML);
